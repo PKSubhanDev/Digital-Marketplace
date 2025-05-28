@@ -1,0 +1,64 @@
+﻿<!-- _Navbar.cshtml -->
+<style>
+    /* Navigation Bar Styles */
+    .Navbar {
+        width: 100%;
+        max-width: 1336px;
+        height: 88px;
+        padding: 32px 78px;
+        background: black;
+        border-radius: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+    }
+
+    .logo-glam {
+        color: #00FF00; /* UON logo color */
+        font-weight: bold;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .logo-mod {
+        color: white;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .Navbar .Name a {
+        font-size: 16px;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        text-decoration: none;
+        margin-right: 30px;
+    }
+
+    /* Dropdown styling */
+    .dropdown-toggle {
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="Navbar">
+    <!-- Brand Logo -->
+    <div class="navbar-brand">
+        <a asp-action="AdminLandingPage" asp-controller="Admin" style="text-decoration:none">
+            <span class="logo-glam">UON</span><span class="logo-mod">Marketplace</span>
+        </a>
+    </div>
+
+    <!-- Navigation Links -->
+    <div class="Name" style="height: 24px; justify-content: space-between; align-items: center; display: flex">
+        <li style="list-style: none; margin-left: 20px;">
+            <form method="post" asp-controller="Login" asp-action="Logout" style="display: inline;">
+                <button type="submit" style="background: none; border: none; color: white; font-size: 16px; text-transform: uppercase; cursor: pointer;">
+                    Logout
+                </button>
+            </form>
+        </li>
+    </div>
+</div>

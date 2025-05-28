@@ -1,0 +1,14 @@
+﻿@model UoNMarketPlace.Model.sellProduct
+
+@Html.Partial("_StudentNavbar")
+
+<div class="container">
+    <h2>@Model.Name (Pending Review)</h2>
+    <p>This product has been flagged for review. It is currently not available for purchase.</p>
+
+    <p><strong>Category:</strong> @Model.Category</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+
+    <a href="@Url.Action("Buy", "Product")" class="btn btn-secondary">Back to Products</a>
+</div>

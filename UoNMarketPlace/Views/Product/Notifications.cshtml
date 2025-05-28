@@ -1,0 +1,39 @@
+﻿@model List<UoNMarketPlace.Model.Notification>
+@Html.Partial("_StudentNavbar");
+
+<div class="container mt-5">
+    <h2>Your Notifications</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No notifications available.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var notification in Model)
+            {
+                <li class="list-group-item @(notification.IsRead ? "" : "list-group-item-info")">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>@notification.Message</span>
+                        <small class="text-muted">@notification.CreatedAt.ToString("g")</small>
+                    </div>
+
+                    @if (ViewBag.IsBuyer && notification.Message.Contains("purchased"))
+                    {
+                        <!-- Review Form for the Buyer -->
+                        <form asp-action="SubmitReview" asp-controller="Product" method="post" class="mt-2">
+                            <input type="hidden" name="sellerId" value="@notification.SellerId" />
+
+                            <div class="d-flex">
+                                <input type="number" name="rating" class="form-control me-2" placeholder="Rating (1-5)" min="1" max="5" required />
+                                <input type="text" name="reviewText" class="form-control me-2" placeholder="Write your review" required />
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                            </div>
+                        </form>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>

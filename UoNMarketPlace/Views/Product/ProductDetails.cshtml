@@ -1,0 +1,79 @@
+﻿@model UoNMarketPlace.Model.sellProduct
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.ImagePath.Split(',')[0]" alt="@Model.Name" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Name</h2>
+            <p>@Model.Description</p>
+            <p>Price: $@($"{Model.Price}") </p>
+            <p>Views: @Model.Views</p>
+
+            <!-- Display average rating -->
+            <div class="product-rating">
+                <strong>Average Rating:</strong>
+                <span class="rating">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        if (i <= Model.Rating)
+                        {
+                            <i class="fas fa-star text-warning"></i> <!-- Filled star -->
+                        }
+                        else
+                        {
+                            <i class="far fa-star text-warning"></i> <!-- Empty star -->
+                        }
+                    }
+                </span>
+                <span>(@Model.Rating)</span>
+            </div>
+
+            <a href="@Url.Action("BuyNow", "Product", new { id = Model.Id })" class="btn btn-primary mt-3">Buy Now</a>
+            <!-- Flag Icon/Button -->
+            <a href="@Url.Action("FlagProduct", "Product", new { id = Model.Id })" class="btn btn-danger mt-3 ml-2">
+                <i class="fas fa-flag"></i> Flag as Inappropriate
+            </a>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h3>Reviews</h3>
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                <ul class="list-group">
+                    @foreach (var review in Model.Reviews)
+                    {
+                        <li class="list-group-item">
+                            <strong>@review.UserName</strong> (@review.DateReviewed.ToShortDateString()):
+                            <p>@review.ReviewText</p>
+                            <span class="rating">
+                                @for (var i = 1; i <= 5; i++)
+                                {
+                                    if (i <= review.Rating)
+                                    {
+                                        <i class="fas fa-star text-warning"></i> <!-- Filled star for rating -->
+                                    }
+                                    else
+                                    {
+                                        <i class="far fa-star text-warning"></i> <!-- Empty star -->
+                                    }
+                                }
+                                <span>(@review.Rating)</span>
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No reviews for the seller.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Add FontAwesome for star icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

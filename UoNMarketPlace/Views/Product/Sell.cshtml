@@ -1,0 +1,120 @@
+﻿@model UoNMarketPlace.ViewModel.sellViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - UoNMarketPlace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Add Bootstrap JS CDN for dropdown functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+
+        /* Curved Rectangle Box for Form */
+        .product-form-container {
+            width: 100%;
+            max-width: 980px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+            .product-form-container h2 {
+                text-align: center;
+                font-family: "Space Grotesk", sans-serif;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .form-label {
+            font-weight: bold;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+
+        .submit-btn {
+            width: 12%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #178f2f;
+            color: white;
+            border: none;
+            border-radius: 48px;
+            cursor: pointer;
+            font-family: "Space Grotesk", sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <!-- Include Navbar Partial -->
+    @Html.Partial("_StudentNavbar");
+
+    <!-- Sell Your Product Form -->
+    <div class="product-form-container">
+        <h2>List Your Product <img src="~/images/box-open.png" alt="Product Box" style="width: 20px;" /></h2>
+
+        <form asp-action="Sell" asp-controller="Product" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label">
+                    <img src="~/images/tags.png" alt="product tag" style="width: 15px;" /> Product Name
+                </label>
+                <input asp-for="Name" class="form-control" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Description" class="form-label">
+                    <img src="~/images/description-alt.png" alt="#" style="width: 15px;" /> Description
+                </label>
+                <textarea asp-for="Description" class="form-control" rows="3" required></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Price" class="form-label">
+                    <img src="~/images/dollar.png" alt="#" style="width: 15px;" />   Price
+                </label>
+                <input asp-for="Price" class="form-control" required />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Category" class="form-label">Category</label>
+                <select asp-for="Category" class="form-control">
+                    <option value="Electronics">Electronics</option>
+                    <option value="Vehicle">Vehicle</option>
+                    <option value="Fashion">Fashion</option>
+                    <option value="Accommodation">Accommodation</option>
+                    <option value="Books">Books</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductImages" class="form-label">
+                    <img src="~/images/productimageicon.png" alt="Box icon" style="width: 15px;" /> Product Images
+                </label>
+                <input asp-for="ProductImages" type="file" class="form-control" multiple required />
+                <span asp-validation-for="ProductImages" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                <img src="~/images/send-icon.png" alt="Submit" style="width: 15px;" /> Submit
+            </button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

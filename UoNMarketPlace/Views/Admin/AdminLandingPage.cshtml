@@ -1,0 +1,127 @@
+﻿@model IEnumerable<UoNMarketPlace.Model.sellProduct>
+
+@Html.Partial("~/Views/Shared/_adminNavbar.cshtml")
+
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Admin Dashboard</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-light mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="display-4">@ViewBag.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Products Listed</h5>
+                    <p class="display-4">@ViewBag.ProductsListed</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-light mb-4">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Flagged Products</h5>
+                    <p class="display-4">@ViewBag.FlaggedProducts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mt-5">Analytics Overview</h3>
+
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="productCategoryChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="monthlyProductChart"></canvas>
+        </div>
+    </div>
+
+    <h3 class="mt-5">Manage Flagged Products</h3>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Reason</th>
+                <th>Seller</th>
+                <th>Date Uploaded</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.FlagReason</td>
+                    <td>@product.SellerId</td>
+                    <td>@product.DateUploaded.ToString("dd MMM yyyy")</td>
+                    <td>                        
+                        <form asp-action="RejectProduct" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form asp-action="ApproveProduct" method="post" class="d-inline">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Product Category Pie Chart
+    fetch('@Url.Action("GetProductCategoryData", "Admin")')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('productCategoryChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: data.map(d => d.category),
+                    datasets: [{
+                        label: 'Products by Category',
+                        data: data.map(d => d.count),
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+                    }]
+                }
+            });
+        });
+
+    // Monthly Product Bar Chart
+    fetch('@Url.Action("GetMonthlyProductData", "Admin")')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('monthlyProductChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(d => `Month ${d.month}`),
+                    datasets: [{
+                        label: 'Products Added',
+                        data: data.map(d => d.count),
+                        backgroundColor: '#42A5F5'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+</script>

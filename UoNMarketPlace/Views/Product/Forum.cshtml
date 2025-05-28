@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model IEnumerable<UoNMarketPlace.Model.AlumniPost>
+
+<!-- Navbar -->
+<!-- Include Navbar Partial -->
+ @Html.Partial("_StudentNavbar")
+
+<div class="container my-4">
+    <h2 class="mb-4 text-primary">Forum - Internship Opportunities</h2>
+
+    @foreach (var post in Model)
+    {
+        var userId = UserManager.GetUserId(User); // Get the current user ID
+        var hasLiked = post.Likes.Any(like => like.UserId == userId); // Check if user liked this post
+
+        <div class="card mb-4 shadow-sm border-0 rounded-3 p-3">
+            <div class="card-body">
+                <h5 class="card-title text-dark fw-bold">@post.Title</h5>
+                <p class="card-text text-muted">@post.Content</p>
+
+                <!-- Post Image with Fixed Size -->
+                @if (!string.IsNullOrEmpty(post.ImagePath))
+                {
+                    <div class="text-center mb-3">
+                        <img src="@post.ImagePath" class="img-thumbnail post-image" alt="Post Image" />
+                    </div>
+                }
+
+                <p class="text-muted mb-1"><strong>Date Posted:</strong> @post.DatePosted.ToString("dd MMM yyyy")</p>
+                <p class="text-muted"><strong>@post.Comments.Count</strong> Comments, <strong>@post.Likes.Count</strong> Likes</p>
+
+                <!-- Like Button -->
+                <form asp-action="LikePost" method="post" class="d-inline-block me-2">
+                    <input type="hidden" name="postId" value="@post.Id" />
+                    <button type="submit" class="btn btn-outline-primary btn-sm">
+                        @if (hasLiked)
+                        {
+                            <span>Liked</span>
+                        }
+                        else
+                        {
+                            <span>Like</span>
+                        }
+                    </button>
+                </form>
+
+                <!-- Add Comment Form -->
+                <form asp-action="AddComment" method="post" class="mt-3">
+                    <input type="hidden" name="postId" value="@post.Id" />
+                    <textarea name="commentText" class="form-control mb-2" placeholder="Add a comment" rows="1"></textarea>
+                    <button type="submit" class="btn btn-primary btn-sm">Comment</button>
+                </form>
+
+                <!-- Display Comments -->
+                <div class="mt-3">
+                    @foreach (var comment in post.Comments)
+                    {
+                        <div class="border p-3 mb-3 rounded bg-light">
+                            <p class="mb-1"><strong>@comment.Text</strong> by <span class="text-primary">@comment.User.UserName</span> on @comment.DateCommented.ToString("dd MMM yyyy")</p>
+
+                            <!-- Display Replies -->
+                            <div class="ms-4 mt-2">
+                                @foreach (var reply in comment.Replies)
+                                {
+                                    <div class="border-start ps-3 my-2">
+                                        <p><strong>@reply.Text</strong> by <span class="text-secondary">@reply.User.UserName</span> on @reply.DateReplied.ToString("dd MMM yyyy")</p>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Add Reply Form -->
+                            <form asp-action="AddReply" method="post" class="mt-2">
+                                <input type="hidden" name="commentId" value="@comment.Id" />
+                                <textarea name="replyText" class="form-control mb-2" placeholder="Reply to this comment" rows="1"></textarea>
+                                <button type="submit" class="btn btn-secondary btn-sm">Reply</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    .btn-sm {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+    }
+
+    .card {
+        transition: box-shadow 0.3s ease;
+    }
+
+        .card:hover {
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .border-start {
+        border-color: #dee2e6 !important;
+    }
+    /* Image Sizing */
+    .post-image {
+        max-width: 200px;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .Navbar {
+        width: 100%;
+        max-width: 1336px;
+        height: 88px;
+        padding: 32px 78px;
+        background: black;
+        border-radius: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+    }
+
+    .logo-glam {
+        color: #00FF00;
+        font-weight: bold;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .logo-mod {
+        color: white;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .Navbar .Name a {
+        font-size: 16px;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        text-decoration: none;
+        margin-right: 30px;
+    }
+</style>

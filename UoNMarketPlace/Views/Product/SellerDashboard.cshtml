@@ -1,0 +1,176 @@
+﻿@model List<UoNMarketPlace.Model.sellProduct>
+
+
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - UoNMarketPlace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Add Bootstrap JS CDN for dropdown functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<!-- Navbar -->
+<!-- Include Navbar Partial -->
+@Html.Partial("_StudentNavbar");
+
+
+<div class="container">
+    <h2>Your Products</h2>
+
+    <!-- Form for Sorting and Filtering -->
+    <form method="get" action="@Url.Action("SellerDashboard", "Product")">
+        <div class="form-group">
+            <label for="sortBy">Sort by:</label>
+            <select id="sortBy" name="sortBy" class="form-control">
+                <option value="dateUploaded" selected="@(ViewBag.SortBy == "dateUploaded" ? "selected" : null)">
+                    Date Uploaded
+                </option>
+                <option value="views" selected="@(ViewBag.SortBy == "views" ? "selected" : null)">
+                    Views
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="filterBy">Filter by:</label>
+            <input id="filterBy" name="filterBy" type="text" class="form-control"
+                   value="@ViewBag.FilterBy" placeholder="Search products..." />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filters</button>
+    </form>
+
+    <!-- Product List -->
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Views</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th>Messages</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Description</td>
+                    <td>$@($"{product.Price}")</td>
+                    <td>@product.Views</td>
+                    <td>
+                        <!-- Display rating as stars -->
+                        <span class="rating">
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                if (i <= product.Rating)
+                                {
+                                    <i class="fas fa-star text-warning"></i> <!-- Filled star -->
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-warning"></i> <!-- Empty star -->
+                                }
+                            }
+                            <span>(@product.Rating)</span>
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Display "Sold" only if the product is sold -->
+                        @if (product.IsSold)
+                        {
+                            <span class="badge badge-success">Sold</span>
+                        }
+                    </td>
+
+                    <td>
+                        <!-- Messages Preview -->
+                        @if (product.Messages.Any())
+                        {
+                            @foreach (var messageGroup in product.Messages.GroupBy(m => m.SenderId))
+                            {
+                                <div>
+                                    <strong>
+                                        @ViewBag.Senders[messageGroup.Key] <!-- Get sender's username -->
+                                    </strong>:
+                                    <span>
+                                        @messageGroup.First().Text.Substring(0, Math.Min(30, messageGroup.First().Text.Length))...
+                                    </span>
+                                    <a href="@Url.Action("ViewMessages", "Chat", new { productId = product.Id, buyerId = messageGroup.Key })"
+                                       class="btn btn-link">View Chat</a>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <span>No messages yet.</span>
+                        }
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("ProductDetailsSeller", "Product", new { id = product.Id })" class="btn btn-primary">View</a>
+
+                        @if (!product.IsSold)
+                        {
+                            <a href="@Url.Action("Edit", "Product", new { id = product.Id })" class="btn btn-warning">Edit</a>
+                            <form method="post" asp-action="DeleteProduct" asp-route-id="@product.Id" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                            <form method="post" asp-action="MarkAsSold" asp-route-productId="@product.Id" class="d-inline mt-2">
+                                <button type="submit" class="btn btn-success">Mark as Sold</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-5">
+        <h3>All Reviews for Your Products</h3>
+        @if (ViewBag.Reviews != null && ViewBag.Reviews.Count > 0)
+        {
+            <ul class="list-group">
+                @foreach (var review in ViewBag.Reviews)
+                {
+                    <li class="list-group-item">
+                        <strong>Product:</strong> @review.Product.Name <br />
+                        <strong>Reviewer:</strong> @review.UserName <br />
+                        <strong>Rating:</strong>
+                        <span class="rating">
+                            @for (var i = 1; i <= 5; i++)
+                            {
+                                if (i <= review.Rating)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                else
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+                            }
+                            <span>(@review.Rating)</span>
+                        </span><br />
+                        <strong>Review:</strong> @review.ReviewText <br />
+                        <small class="text-muted">Reviewed on: @review.DateReviewed.ToString("g")</small>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No reviews for your products yet.</p>
+        }
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

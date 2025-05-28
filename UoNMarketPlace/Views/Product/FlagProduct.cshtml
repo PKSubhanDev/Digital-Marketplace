@@ -1,0 +1,19 @@
+﻿@model UoNMarketPlace.Model.sellProduct
+
+@Html.Partial("_StudentNavbar")
+
+<div class="container">
+    <h2>Flag Product: @Model.Name</h2>
+
+    <form asp-action="FlagProduct" method="post">
+        <input type="hidden" name="productId" value="@Model.Id" />
+
+        <div class="form-group">
+            <label for="reason">Reason for flagging:</label>
+            <textarea name="reason" class="form-control" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Submit Flag</button>
+        <a href="@Url.Action("ProductDetails", "Product", new { id = Model.Id })" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

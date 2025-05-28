@@ -1,0 +1,86 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    ViewData["Title"] = "Alumini";
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - UoNMarketPlace</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+        .Navbar {
+            width: 100%;
+            max-width: 1336px;
+            height: 88px;
+            padding: 32px 78px;
+            background: black;
+            border-radius: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .logo-glam {
+            color: #00FF00;
+            font-weight: bold;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .logo-mod {
+            color: white;
+            font-family: "Space Grotesk", sans-serif;
+        }
+
+        .Navbar .Name a {
+            font-size: 16px;
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            text-decoration: none;
+            margin-right: 30px;
+        }
+
+        .dropdown-toggle {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+    </style>
+
+    </head>
+    <body>
+        <div class="Navbar">
+            <div class="navbar-brand">
+                <span class="logo-glam">UON</span><span class="logo-mod">Marketplace</span>
+            </div>
+
+            <div class="Name" style="height: 24px; justify-content: space-between; align-items: center; display: flex">
+                <li style="list-style: none; margin-right: 125px;">
+                    <a asp-action="Forum" asp-controller="Alumini" class="Forum" style="text-decoration:none; color: white; font-size: 16px; font-family: Space Grotesk; font-weight: 500; text-transform: uppercase;">
+                        Forum
+                    </a>
+                </li>
+
+                <li style="list-style: none; margin-right: 125px;">
+                    <a asp-action="AlumniDashboard" asp-controller="Alumini" class="Dashboard" style="text-decoration:none; color: white; font-size: 16px; font-family: Space Grotesk; font-weight: 500; text-transform: uppercase;">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li style="list-style: none; margin-left: 20px;">
+                    <form method="post" asp-controller="Login" asp-action="Logout" style="display: inline;">
+                        <button type="submit" style="background: none; border: none; color: white; font-size: 16px; text-transform: uppercase; cursor: pointer;">
+                            Logout
+                        </button>
+                    </form>
+                </li>
+            </div>
+        </div>
+    </body>
+</html>

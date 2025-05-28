@@ -1,0 +1,40 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var userId = HttpContextAccessor.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var userName = HttpContextAccessor.HttpContext.User.Identity.Name;
+    var receiverId = ViewBag.ReceiverId as string;
+    var receiverName = ViewBag.ReceiverName as string;
+}
+
+<h2>Chat with @receiverName</h2>
+
+<div id="messages" class="border p-3 mb-3" style="height: 300px; overflow-y: scroll;">
+    @foreach (var message in Model)
+    {
+        <div class="message mb-2">
+            <strong>@(message.SenderId == userId ? "You" : receiverName):</strong>
+            <span>@message.Text</span>
+            <span class="text-muted float-right">@message.SentAt.ToString("g")</span>
+        </div>
+    }
+</div>
+
+<form asp-action="SendMessage" method="post" class="form-inline">
+    <input type="hidden" name="receiverId" value="@receiverId" />
+    <div class="input-group w-100">
+        <input type="text" name="message" class="form-control" placeholder="Type your message..." required />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+    </div>
+</form>
+
+<!-- Optional styling for better layout -->
+<style>
+    .message {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>

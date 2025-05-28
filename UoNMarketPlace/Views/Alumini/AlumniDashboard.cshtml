@@ -1,0 +1,158 @@
+﻿@model IEnumerable<UoNMarketPlace.Model.AlumniPost>
+@{
+    ViewData["Title"] = "Alumni Dashboard";
+}
+
+<div class="Navbar">
+    <div class="navbar-brand">
+        <span class="logo-glam">UON</span><span class="logo-mod">Marketplace</span>
+    </div>
+
+    <div class="Name" style="height: 24px; justify-content: space-between; align-items: center; display: flex">
+        <li style="list-style: none; margin-right: 125px;">
+            <a asp-action="Forum" asp-controller="Alumini" class="Forum" style="text-decoration:none; color: white; font-size: 16px; font-family: Space Grotesk; font-weight: 500; text-transform: uppercase;">
+                Forum
+            </a>
+        </li>
+
+        <li style="list-style: none; margin-right: 125px;">
+            <a asp-action="AlumniDashboard" asp-controller="Alumini" class="Dashboard" style="text-decoration:none; color: white; font-size: 16px; font-family: Space Grotesk; font-weight: 500; text-transform: uppercase;">
+                Dashboard
+            </a>
+        </li>
+
+        <li style="list-style: none; margin-left: 20px;">
+            <form method="post" asp-controller="Login" asp-action="Logout" style="display: inline;">
+                <button type="submit" style="background: none; border: none; color: white; font-size: 16px; text-transform: uppercase; cursor: pointer;">
+                    Logout
+                </button>
+            </form>
+        </li>
+    </div>
+</div>
+
+<!-- Main Content Area -->
+<div class="content-container" style="padding: 20px;">
+
+    <!-- Header Section -->
+    <h2 class="header-title">Explore Internship Opportunities</h2>
+
+    <!-- Internship Posting Form -->
+    <div class="post-form" style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3>Post an Internship Opportunity</h3>
+        <div class="container">
+            <a href="@Url.Action("CreatePost", "Alumini")" class="btn btn-primary mb-3">Create New Post</a>
+        </div>
+    </div>
+
+    <!-- Internship Listings -->
+    <div class="internship-listing" style="background-color: #ffffff; padding: 20px; border-radius: 8px;">
+        @if (Model != null)
+        {
+            foreach (var post in Model)
+            {
+                <div class="internship-card" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <h4>@post.Title</h4>
+                    <p>@post.Content</p>
+                    <a asp-action="Forum" asp-controller="Alumini">
+                        <button class="btn btn-success">View Details</button>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No internships available currently. Be the first to post!</p>
+        }
+    </div>
+</div>
+
+<!-- Optional CSS Styling -->
+<style>
+    .Navbar {
+        width: 100%;
+        max-width: 1336px;
+        height: 88px;
+        padding: 32px 78px;
+        background: black;
+        border-radius: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px auto;
+    }
+
+    .logo-glam {
+        color: #00FF00;
+        font-weight: bold;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .logo-mod {
+        color: white;
+        font-family: "Space Grotesk", sans-serif;
+    }
+
+    .Navbar .Name a {
+        font-size: 16px;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 500;
+        text-transform: uppercase;
+        text-decoration: none;
+        margin-right: 30px;
+    }
+
+    .dropdown-toggle {
+        color: white;
+        font-size: 16px;
+        font-weight: 500;
+        text-transform: uppercase;
+    }
+
+    .content-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .header-title {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .post-form {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 4px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+</style>
+
